@@ -8,7 +8,8 @@ btn.addEventListener('click', function () {
     var peticion = new XMLHttpRequest();
     
     // Abrir una solicitud GET para obtener datos de la URL proporcionada
-    peticion.open('GET', 'https://api.npoint.io/fc342c1204d57e77de96');
+    //peticion.open('GET', 'https://api.npoint.io/fc342c1204d57e77de96');
+    peticion.open('GET', 'php/usuarios.php');
 
     // Agregar una clase 'active' al elemento loader para mostrar un indicador de carga
     loader.classList.add('active');
