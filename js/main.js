@@ -13,6 +13,28 @@ btn.addEventListener('click', function () {
     // Agregar una clase 'active' al elemento loader para mostrar un indicador de carga
     loader.classList.add('active');
 
+    // Esta función se ejecuta cuando la petición AJAX ha sido completada
+    peticion.onload = function() {
+        // Se parsea la respuesta de la petición AJAX, asumiendo que es un JSON
+        var datos = JSON.parse(peticion.responseText);
+
+        // Se itera sobre los primeros 11 elementos del array de datos obtenidos
+        for (let i = 0; i < 11; i++) {
+            // Se crea un elemento <tr> para cada entrada de datos
+            var elemento = document.createElement('tr');
+
+            // Se añaden celdas <td> al elemento <tr> con información de cada usuario
+            elemento.innerHTML += ('<td>' + datos[i].id + '</td>');
+            elemento.innerHTML += ('<td>' + datos[i].nombre + '</td>');
+            elemento.innerHTML += ('<td>' + datos[i].edad + '</td>');
+            elemento.innerHTML += ('<td>' + datos[i].pais + '</td>');
+            elemento.innerHTML += ('<td>' + datos[i].correo + '</td>');
+
+            // Se añade el elemento <tr> al final de la tabla con el id "tabla"
+            document.getElementById('tabla').appendChild(elemento);
+        }
+    };
+
     // Función de devolución de llamada que se activa cada vez que el estado de la solicitud cambia
     peticion.onreadystatechange = function(){
         // Comprobar si la solicitud se ha completado y el estado es 'OK' (200)
@@ -20,8 +42,7 @@ btn.addEventListener('click', function () {
             // Eliminar la clase 'active' del elemento loader para ocultar el indicador de carga
             loader.classList.remove('active');
         }
-    }
-
+    }   
     // Enviar la solicitud al servidor
     peticion.send();
 })
