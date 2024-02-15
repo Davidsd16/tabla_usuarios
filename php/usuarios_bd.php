@@ -1,5 +1,11 @@
 <?php
 
+// Esta línea desactiva la notificación y visualización de errores en PHP.
+error_reporting(0);
+
+// Establece el encabezado HTTP para indicar que el contenido es JSON y utiliza UTF-8
+header('Content-type: application/json; charset=utf-8');
+
 // Establece una conexión con la base de datos utilizando MySQLi
 $conexion = new mysqli('localhost', 'root', '', 'tabla_usuarios');
 
