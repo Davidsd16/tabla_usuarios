@@ -24,6 +24,34 @@ function cargarUsuarios(){
     // Agregar la clase 'active' al loader para mostrar la animación de carga
     loader.classList.add('active');
 
+// Esta función se ejecuta cuando la petición se completa correctamente
+peticion.onload = function() {
+    // Analizar la respuesta JSON recibida
+    var datos = JSON.parse(peticion.responseText);
+    
+    // Verificar si hay un error en los datos recibidos
+    if (datos.error) {
+        // Si hay un error, agregar la clase 'active' al elemento 'error_box'
+        error_box.classList.add('active');
+    } else {
+        // Iterar sobre los datos recibidos para cada usuario
+        for(var i = 0; i < datos.length; i++){
+            // Se crea un elemento <tr> para cada entrada de datos
+            var elemento = document.createElement('tr');
+
+            // Se añaden celdas <td> al elemento <tr> con información de cada usuario
+            elemento.innerHTML += ('<td>' + datos[i].id + '</td>');
+            elemento.innerHTML += ('<td>' + datos[i].nombre + '</td>');
+            elemento.innerHTML += ('<td>' + datos[i].edad + '</td>');
+            elemento.innerHTML += ('<td>' + datos[i].pais + '</td>');
+            elemento.innerHTML += ('<td>' + datos[i].correo + '</td>');
+            
+            // Se añade el elemento <tr> al final de la tabla con el id "tabla"
+            document.getElementById('tabla').appendChild(elemento);
+        }
+    }
+}
+
     // Definir el evento para manejar la respuesta de la solicitud
     peticion.onreadystatechange = function(){
 		// Verificar si la solicitud ha sido completada y la respuesta está lista
