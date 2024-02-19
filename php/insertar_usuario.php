@@ -1,7 +1,14 @@
 <?php
 
+error_reporting(0);
 // Establecer el encabezado HTTP para indicar que el contenido es JSON y utiliza UTF-8
 header('Content-type: application/json; charset=utf-8');
+
+// Obtener datos del formulario y limpiarlos
+$nombre = limpiarInput($_POST['nombre']);
+$edad = limpiarInput($_POST['edad']);
+$pais = limpiarInput($_POST['pais']);
+$correo = filter_var(limpiarInput($_POST['correo']), FILTER_SANITIZE_EMAIL);
 
 // Función para limpiar los datos de entrada
 function limpiarInput($dato) {
@@ -30,11 +37,6 @@ function validarDatos($nombre, $edad, $pais, $correo) {
     return '';
 }
 
-// Obtener datos del formulario y limpiarlos
-$nombre = limpiarInput($_POST['nombre']);
-$edad = limpiarInput($_POST['edad']);
-$pais = limpiarInput($_POST['pais']);
-$correo = filter_var(limpiarInput($_POST['correo']), FILTER_SANITIZE_EMAIL);
 
 // Validar los datos de entrada
 $mensajeError = validarDatos($nombre, $edad, $pais, $correo);
@@ -62,6 +64,8 @@ if ($mensajeError === '') {
         } else {
             $respuesta = ['error' => false, 'mensaje' => 'Datos insertados correctamente.'];
         }
+
+        $respuesta = [];
     }
 } else {
     // Se encontraron errores en la validación de los datos

@@ -65,7 +65,48 @@ peticion.onload = function() {
     peticion.send();
 }
 
+// Esta función se llama cuando se intenta agregar un usuario
+function agregarUsuarios(e) {
+    // Prevenir el comportamiento predeterminado del evento (por ejemplo, el envío de un formulario)
+    e.preventDefault();
+
+    // Crear una nueva instancia de XMLHttpRequest para hacer una solicitud al servidor
+    var peticion = new XMLHttpRequest();
+
+    // Abrir una nueva solicitud POST al archivo insertar_usuarios.php en el servidor
+    peticion.open('POST', 'php/insertar_usuarios.php');
+
+    // Obtener los valores de los campos del formulario y limpiarlos
+    usuario_nombre = formulario.nombre.value.trim();
+    usuario_edad = parseInt(formulario.edad.value.trim());
+    usuario_pais = formulario.pais.value.trim();
+    usuario_correo = formulario.correo.value.trim();
+
+    // Verificar si el formulario es válido llamando a la función formulario_valido
+    if (formulario_valido()) {
+        // Si el formulario es válido, imprimir un mensaje de confirmación en la consola
+        console.log('Ok');
+    }
+}
+
 // Agregar un evento de escucha al botón para cargar usuarios cuando se haga clic
 btn_cargar_usuarios.addEventListener('click', function() {
     cargarUsuarios(); // Llamar a la función para cargar usuarios
-})
+});
+
+// Agregar un "escuchador de eventos" al formulario que se activará cuando se envíe el formulario
+formulario.addEventListener('submit', function(e) {
+    // Cuando se envíe el formulario, llamar a la función agregarUsuarios y pasar el evento como parámetro
+    agregarUsuarios(e);
+});
+
+
+// Esta función verifica si los datos del formulario son válidos
+function formulario_valido() {
+    // Verificar si el nombre, la edad, el país y el correo electrónico no están vacíos
+    // y la edad es un número válido
+    return usuario_nombre !== '' && 
+        !isNaN(usuario_edad) && 
+        usuario_pais !== '' && 
+        usuario_correo !== '';
+}
