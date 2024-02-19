@@ -76,6 +76,7 @@ function agregarUsuarios(e) {
     // Abrir una nueva solicitud POST al archivo insertar_usuarios.php en el servidor
     peticion.open('POST', 'php/insertar_usuarios.php');
 
+
     // Obtener los valores de los campos del formulario y limpiarlos
     usuario_nombre = formulario.nombre.value.trim();
     usuario_edad = parseInt(formulario.edad.value.trim());
@@ -83,11 +84,51 @@ function agregarUsuarios(e) {
     usuario_correo = formulario.correo.value.trim();
 
     // Verificar si el formulario es válido llamando a la función formulario_valido
-    if (formulario_valido()) {
-        // Si el formulario es válido, imprimir un mensaje de confirmación en la consola
-        console.log('Ok');
+    // Si el formulario es válido, enviar los datos al servidor
+if (formulario_valido()) {
+    // Ocultar el contenedor de mensajes de error
+    error_box.classList.remove('active');
+    
+    // Construir los parámetros a enviar al servidor en formato de cadena
+    var parametros = 'nombre=' + usuario_nombre + '&edad=' + usuario_edad + '&pais=' + usuario_pais + '&correo=' + usuario_correo;
+
+    // Establecer el tipo de contenido de la solicitud como application/x-www-form-urlencoded
+    peticion.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    // Mostrar el indicador de carga
+    loader.classList.add('active');
+
+    // Manejar la respuesta cuando la solicitud se completa exitosamente
+    peticion.onload = function() {
+        // Cargar los usuarios nuevamente para actualizar la tabla
+        cargarUsuarios();
+        
+        // Limpiar los campos del formulario después de enviar los datos
+        formulario.nombre.value = '';
+        formulario.edad.value = '';
+        formulario.correo.value = '';
+        formulario.pais.value = '';
     }
+
+    // Manejar cambios en el estado de la solicitud
+    peticion.onreadystatechange = function(){
+        // Verificar si la solicitud se ha completado y el estado de la respuesta
+        if(peticion.readyState == 4 && peticion.status == 200){
+            // Ocultar el indicador de carga cuando la respuesta se ha recibido completamente
+            loader.classList.remove('active');
+        }
+    }
+
+    // Enviar la solicitud al servidor con los parámetros construidos
+    peticion.send(parametros);
+
+} else {
+    // Mostrar el contenedor de mensajes de error y establecer el mensaje de error
+    error_box.classList.add('active');
+    error_box.innerHTML = 'Por favor completa el formulario correctamente';
 }
+
+
 
 // Agregar un evento de escucha al botón para cargar usuarios cuando se haga clic
 btn_cargar_usuarios.addEventListener('click', function() {
