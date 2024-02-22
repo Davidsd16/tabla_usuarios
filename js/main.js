@@ -151,3 +151,4 @@ function formulario_valido() {
         usuario_pais !== '' && 
         usuario_correo !== '';
 }
+}
