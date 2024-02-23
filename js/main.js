@@ -74,7 +74,7 @@ function agregarUsuarios(e) {
     var peticion = new XMLHttpRequest();
 
     // Abrir una nueva solicitud POST al archivo insertar_usuarios.php en el servidor
-    peticion.open('POST', 'php/insertar_usuarios.php');
+    peticion.open('POST', 'php/insertar_usuario.php');
 
 
     // Obtener los valores de los campos del formulario y limpiarlos
@@ -85,70 +85,67 @@ function agregarUsuarios(e) {
 
     // Verificar si el formulario es válido llamando a la función formulario_valido
     // Si el formulario es válido, enviar los datos al servidor
-if (formulario_valido()) {
-    // Ocultar el contenedor de mensajes de error
-    error_box.classList.remove('active');
-    
-    // Construir los parámetros a enviar al servidor en formato de cadena
-    var parametros = 'nombre=' + usuario_nombre + '&edad=' + usuario_edad + '&pais=' + usuario_pais + '&correo=' + usuario_correo;
-
-    // Establecer el tipo de contenido de la solicitud como application/x-www-form-urlencoded
-    peticion.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-    // Mostrar el indicador de carga
-    loader.classList.add('active');
-
-    // Manejar la respuesta cuando la solicitud se completa exitosamente
-    peticion.onload = function() {
-        // Cargar los usuarios nuevamente para actualizar la tabla
-        cargarUsuarios();
+    if (formulario_valido()) {
+        // Ocultar el contenedor de mensajes de error
+        error_box.classList.remove('active');
         
-        // Limpiar los campos del formulario después de enviar los datos
-        formulario.nombre.value = '';
-        formulario.edad.value = '';
-        formulario.correo.value = '';
-        formulario.pais.value = '';
-    }
+        // Construir los parámetros a enviar al servidor en formato de cadena
+        var parametros = 'nombre=' + usuario_nombre + '&edad=' + usuario_edad + '&pais=' + usuario_pais + '&correo=' + usuario_correo;
 
-    // Manejar cambios en el estado de la solicitud
-    peticion.onreadystatechange = function(){
-        // Verificar si la solicitud se ha completado y el estado de la respuesta
-        if(peticion.readyState == 4 && peticion.status == 200){
-            // Ocultar el indicador de carga cuando la respuesta se ha recibido completamente
-            loader.classList.remove('active');
+        // Establecer el tipo de contenido de la solicitud como application/x-www-form-urlencoded
+        peticion.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        // Mostrar el indicador de carga
+        loader.classList.add('active');
+
+        // Manejar la respuesta cuando la solicitud se completa exitosamente
+        peticion.onload = function() {
+            // Cargar los usuarios nuevamente para actualizar la tabla
+            cargarUsuarios();
+            
+            // Limpiar los campos del formulario después de enviar los datos
+            formulario.nombre.value = '';
+            formulario.edad.value = '';
+            formulario.correo.value = '';
+            formulario.pais.value = '';
         }
+
+        // Manejar cambios en el estado de la solicitud
+        peticion.onreadystatechange = function(){
+            // Verificar si la solicitud se ha completado y el estado de la respuesta
+            if(peticion.readyState == 4 && peticion.status == 200){
+                // Ocultar el indicador de carga cuando la respuesta se ha recibido completamente
+                loader.classList.remove('active');
+            }
+        }
+
+        // Enviar la solicitud al servidor con los parámetros construidos
+        peticion.send(parametros);
+
+        } else {
+            // Mostrar el contenedor de mensajes de error y establecer el mensaje de error
+            error_box.classList.add('active');
+            error_box.innerHTML = 'Por favor completa el formulario correctamente';
+        }
+
+    // Agregar un evento de escucha al botón para cargar usuarios cuando se haga clic
+    btn_cargar_usuarios.addEventListener('click', function() {
+        cargarUsuarios(); // Llamar a la función para cargar usuarios
+    });
+
+    // Agregar un "escuchador de eventos" al formulario que se activará cuando se envíe el formulario
+    formulario.addEventListener('submit', function(e) {
+        // Cuando se envíe el formulario, llamar a la función agregarUsuarios y pasar el evento como parámetro
+        agregarUsuarios(e);
+    });
+
+    // Esta función verifica si los datos del formulario son válidos
+    function formulario_valido() {
+        // Verificar si el nombre, la edad, el país y el correo electrónico no están vacíos
+        // y la edad es un número válido
+        return usuario_nombre !== '' && 
+            !isNaN(usuario_edad) && 
+            usuario_pais !== '' && 
+            usuario_correo !== '';
     }
-
-    // Enviar la solicitud al servidor con los parámetros construidos
-    peticion.send(parametros);
-
-} else {
-    // Mostrar el contenedor de mensajes de error y establecer el mensaje de error
-    error_box.classList.add('active');
-    error_box.innerHTML = 'Por favor completa el formulario correctamente';
-}
-
-
-
-// Agregar un evento de escucha al botón para cargar usuarios cuando se haga clic
-btn_cargar_usuarios.addEventListener('click', function() {
-    cargarUsuarios(); // Llamar a la función para cargar usuarios
-});
-
-// Agregar un "escuchador de eventos" al formulario que se activará cuando se envíe el formulario
-formulario.addEventListener('submit', function(e) {
-    // Cuando se envíe el formulario, llamar a la función agregarUsuarios y pasar el evento como parámetro
-    agregarUsuarios(e);
-});
-
-
-// Esta función verifica si los datos del formulario son válidos
-function formulario_valido() {
-    // Verificar si el nombre, la edad, el país y el correo electrónico no están vacíos
-    // y la edad es un número válido
-    return usuario_nombre !== '' && 
-        !isNaN(usuario_edad) && 
-        usuario_pais !== '' && 
-        usuario_correo !== '';
-}
 }
